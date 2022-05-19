@@ -1,0 +1,21 @@
+[programs.localnet]
+neonomad_staking = "3LENVKyJfTQeh6U714NQKYvqEibjqZLPZYfprZsAoCUS"
+
+[programs.devnet]
+neonomad_staking = "94fsNRJx5pcXxcmWXW2RR3bHbT7SAmhfdZGxm4GLwC1"
+
+[programs.testnet]
+neonomad_staking = "3cjoBZpiEe49TiFcyvPVBTmR5GxiYzpGmw2HyJyszphw"
+
+[programs.mainnet]
+neonomad_staking = "GfXYYi5TFPG5ixdfiXLQacgjZbatqpb9uZZPMTBxMVCx"
+
+[registry]
+url = "https://anchor.projectserum.com"
+
+[provider]
+cluster = "mainnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "mocha -t 1000000 tests/staking_test.js"
