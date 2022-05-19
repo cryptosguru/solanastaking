@@ -607,7 +607,8 @@ impl ExtraRewardsAccount {
             if *lock_duration >= tier.duration {
                 return tier.extra_percentage;
             }
-        }        
+        }     
+        return 0; 
     }
 }
 
