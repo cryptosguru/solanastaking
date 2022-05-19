@@ -369,7 +369,7 @@ pub struct CreateState<'info> {
     pub reward_vault: Account<'info, TokenAccount>,
     pub reward_mint: Box<Account<'info, Mint>>,
     pub authority: Signer<'info>,
-    pub system_program: UncheckedAccount<'info>,
+    pub system_program: Program<'info, System>,
     #[account(constraint = token_program.key == &token::ID)]
     pub token_program: Program<'info, Token>,
     pub clock: Sysvar<'info, Clock>,
@@ -416,7 +416,7 @@ pub struct CreateFarmPool<'info> {
     #[account(constraint = vault.owner == pool.key())]
     pub vault: Account<'info, TokenAccount>,
     pub authority: Signer<'info>,
-    pub system_program: UncheckedAccount<'info>,
+    pub system_program: Program<'info, System>,
     #[account(constraint = token_program.key == &token::ID)]
     pub token_program: Program<'info, Token>,
     pub clock: Sysvar<'info, Clock>,
@@ -430,7 +430,7 @@ pub struct CloseFarmPool<'info> {
     pub pool: Loader<'info, FarmPoolAccount>,
     #[account(mut)]
     pub authority: Signer<'info>,
-    pub system_program: UncheckedAccount<'info>,
+    pub system_program: Program<'info, System>,
     pub clock: Sysvar<'info, Clock>,
 }
 
@@ -450,7 +450,7 @@ pub struct CreateExtraRewardsConfigs<'info> {
     #[account(init, seeds = [b"extra".as_ref()], bump = bump, payer = authority, space = 8 + 197)]
     pub extra_reward_account: Box<Account<'info, ExtraRewardsAccount>>,
     pub authority: Signer<'info>,
-    pub system_program: UncheckedAccount<'info>,
+    pub system_program: Program<'info, System>,
 }
 
 #[derive(Accounts)]
@@ -458,7 +458,7 @@ pub struct SetExtraRewardsConfigs<'info> {
     #[account(mut, seeds = [b"extra".as_ref()], bump = extra_reward_account.bump, has_one = authority)]
     pub extra_reward_account: Box<Account<'info, ExtraRewardsAccount>>,
     pub authority: Signer<'info>,
-    pub system_program: UncheckedAccount<'info>,
+    pub system_program: Program<'info, System>,
 }
 
 #[derive(Accounts)]
@@ -477,7 +477,7 @@ pub struct CreatePoolUser<'info> {
     #[account(mut, seeds = [pool.load()?.mint.key().as_ref()], bump = pool.load()?.bump)]
     pub pool: Loader<'info, FarmPoolAccount>,
     pub authority: Signer<'info>,
-    pub system_program: UncheckedAccount<'info>,
+    pub system_program: Program<'info, System>,
     #[account(constraint = token_program.key == &token::ID)]
     pub token_program: Program<'info, Token>,
 }
@@ -494,7 +494,7 @@ pub struct CreateUserEtherAddress<'info> {
     )]
     pub user: Loader<'info, FarmUserEtherAddress>,
     pub authority: Signer<'info>,
-    pub system_program: UncheckedAccount<'info>,
+    pub system_program: Program<'info, System>,
 }
 
 #[derive(Accounts)]
@@ -502,7 +502,7 @@ pub struct SetUserEtherAddress<'info> {
     #[account(mut, seeds = [b"ether".as_ref(), authority.key().as_ref()], bump = user.load()?.bump, has_one = authority)]
     pub user: Loader<'info, FarmUserEtherAddress>,
     pub authority: Signer<'info>,
-    pub system_program: UncheckedAccount<'info>,
+    pub system_program: Program<'info, System>,
 }
 
 #[derive(Accounts)]
@@ -522,7 +522,7 @@ pub struct Stake<'info> {
     pub pool_vault: Box<Account<'info, TokenAccount>>,
     #[account(mut, constraint = user_vault.owner == authority.key())]
     pub user_vault: Box<Account<'info, TokenAccount>>,
-    pub system_program: UncheckedAccount<'info>,
+    pub system_program: Program<'info, System>,
     #[account(constraint = token_program.key == &token::ID)]
     pub token_program: Program<'info, Token>,
     pub clock: Sysvar<'info, Clock>,
@@ -545,7 +545,7 @@ pub struct Harvest<'info> {
     pub reward_vault: Box<Account<'info, TokenAccount>>,
     #[account(mut, constraint = user_vault.owner == authority.key())]
     pub user_vault: Box<Account<'info, TokenAccount>>,
-    pub system_program: UncheckedAccount<'info>,
+    pub system_program: Program<'info, System>,
     #[account(constraint = token_program.key == &token::ID)]
     pub token_program: Program<'info, Token>,
     pub clock: Sysvar<'info, Clock>,
