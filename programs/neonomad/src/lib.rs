@@ -576,7 +576,7 @@ pub struct DurationExtraRewardConfig {
 }
 
 impl ExtraRewardsAccount {
-    fn validate<'info>(&mut self) -> Result<()> {
+    fn validate(&mut self) -> Result<()> {
         if self.configs.len() > 1 {
             let mut duration = 0;
             let mut extra_percentage = 0;
@@ -592,7 +592,7 @@ impl ExtraRewardsAccount {
         }
         Ok(())
     }
-    fn validate_lock_duration<'info>(&mut self, lock_duration: &i64) -> Result<()> {
+    fn validate_lock_duration(&mut self, lock_duration: &i64) -> Result<()> {
         for config in self.configs.iter() {
             if config.duration == *lock_duration {
                 return Ok(())
@@ -600,15 +600,14 @@ impl ExtraRewardsAccount {
         }
         Err(ErrorCode::InvalidLockDuration.into())
     }
-    fn get_extra_reward_percentage<'info>(&mut self, lock_duration: &i64) -> u64 {
+    fn get_extra_reward_percentage(&mut self, lock_duration: &i64) -> u64 {
         let reversed_configs: Vec<DurationExtraRewardConfig> =
             self.configs.iter().rev().cloned().collect();
         for tier in reversed_configs.iter() {
             if *lock_duration >= tier.duration {
                 return tier.extra_percentage;
             }
-        }
-        return 0;
+        }        
     }
 }
 
@@ -693,10 +692,10 @@ impl FarmPoolUserAccount {
             .unwrap()
             .checked_div(ACC_PRECISION)
             .unwrap()
-            .checked_sub(u128::from(self.reward_debt))
+            .checked_sub(self.reward_debt)
             .unwrap();
         self.reward_amount = self.reward_amount.checked_add(pending_amount).unwrap();
-        let extra_amount: u128 = u128::from(pending_amount)
+        let extra_amount: u128 = pending_amount
             .checked_mul(u128::from(*extra_percentage))
             .unwrap()
             .checked_div(u128::from(FULL_100))
@@ -704,7 +703,7 @@ impl FarmPoolUserAccount {
         self.extra_reward = self.extra_reward.checked_add(extra_amount).unwrap();
         Ok(())
     }
-    fn calculate_reward_debt<'info>(&mut self, pool: &FarmPoolAccount) -> Result<()> {
+    fn calculate_reward_debt(&mut self, pool: &FarmPoolAccount) -> Result<()> {
 
         // msg!("amount {}", self.amount);
         // msg!("acc_per_share {}", pool.acc_reward_per_share);
