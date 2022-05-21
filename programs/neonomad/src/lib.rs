@@ -99,19 +99,7 @@ pub mod neonomad_staking {
         point: u64,
         amount_multipler: u64,
     ) -> ProgramResult {
-        let mut state = _ctx.accounts.state.load_mut()?;
-
-        let provided_remaining_accounts = &mut _ctx.remaining_accounts.iter();
-        let i = 0;
-        while i < _ctx.remaining_accounts.len(){
-            i +=1;
-            let provided_token_accountinfo = next_account_info(provided_remaining_accounts)?;
-            assert_owned_by(provided_token_accountinfo, &SPL_TOKEN_ID)?;
-            let provided_token_account: spl_token::state::Account = 
-            assert_initialized(provided_token_accountinfo)?;
-            assert_eq!(provided_token_account.owner, *_ctx.accounts.user.key);
-            assert_eq!(provided_token_account.amount, 1);
-        }
+        let mut state = _ctx.accounts.state.load_mut()?;       
 
         for pool_acc in _ctx.remaining_accounts.iter(){
             let loader = Loader::<FarmPoolAccount>::try_from(&_ctx.program_id, &pool_acc)?;
