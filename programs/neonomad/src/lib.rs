@@ -84,8 +84,13 @@ pub mod neonomad_staking {
         token_per_second: u64,
     ) -> ProgramResult {
         let mut state = _ctx.accounts.state.load_mut()?;
-        for pool_acc in _ctx.remaining_accounts.iter() {
-            let loader = Loader::<FarmPoolAccount>::try_from(&_ctx.program_id, &pool_acc)?;
+        let provided_remaining_accounts = &mut _ctx.remaining_accounts.iter();
+        let mut i = 0;
+        
+        while i < _ctx.remaining_accounts.len(){
+            i +=1;
+            let provided_token_accountinfo = next_account_info(provided_remaining_accounts)?;
+            let loader = Loader::<FarmPoolAccount>::try_from(&_ctx.program_id, &provided_token_accountinfo)?;
             loader.load_mut()?.update(&state, &_ctx.accounts.clock)?;
         }
         state.token_per_second = token_per_second;
@@ -99,12 +104,7 @@ pub mod neonomad_staking {
         point: u64,
         amount_multipler: u64,
     ) -> ProgramResult {
-        let mut state = _ctx.accounts.state.load_mut()?;       
-
-        for pool_acc in _ctx.remaining_accounts.iter(){
-            let loader = Loader::<FarmPoolAccount>::try_from(&_ctx.program_id, &pool_acc)?;
-            loader.load_mut()?.update(&state, &_ctx.accounts.clock)?;
-        }
+         let mut state = _ctx.accounts.state.load_mut()?;
 
         let pool = &mut _ctx.accounts.pool.load_init()?;
         pool.bump = bump;
@@ -125,8 +125,15 @@ pub mod neonomad_staking {
 
     pub fn close_pool(_ctx: Context<CloseFarmPool>) -> ProgramResult {
         let mut state = _ctx.accounts.state.load_mut()?;
-        for pool_acc in _ctx.remaining_accounts.iter() {
-            let loader = Loader::<FarmPoolAccount>::try_from(&_ctx.program_id, &pool_acc)?;
+
+        let provided_remaining_accounts = &mut _ctx.remaining_accounts.iter();
+        let mut i = 0;
+        
+        while i < _ctx.remaining_accounts.len(){
+            i +=1;
+
+            let provided_token_accountinfo = next_account_info(provided_remaining_accounts)?;
+            let loader = Loader::<FarmPoolAccount>::try_from(&_ctx.program_id, &provided_token_accountinfo)?;
             loader.load_mut()?.update(&state, &_ctx.accounts.clock)?;
         }
         let pool = _ctx.accounts.pool.load()?;
@@ -150,8 +157,14 @@ pub mod neonomad_staking {
 
     pub fn change_pool_point(_ctx: Context<ChangePoolSetting>, point: u64) -> ProgramResult {
         let mut state = _ctx.accounts.state.load_mut()?;
-        for pool_acc in _ctx.remaining_accounts.iter() {
-            let loader = Loader::<FarmPoolAccount>::try_from(&_ctx.program_id, &pool_acc)?;
+        let provided_remaining_accounts = &mut _ctx.remaining_accounts.iter();
+        let mut i = 0;
+        
+        while i < _ctx.remaining_accounts.len(){
+            i +=1;
+
+            let provided_token_accountinfo = next_account_info(provided_remaining_accounts)?;
+            let loader = Loader::<FarmPoolAccount>::try_from(&_ctx.program_id, &provided_token_accountinfo)?;
             loader.load_mut()?.update(&state, &_ctx.accounts.clock)?;
         }
         let mut pool = _ctx.accounts.pool.load_mut()?;
